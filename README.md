@@ -28,7 +28,7 @@ Contains:
 
 Typical Usage:
 **************
-    see bin/exmaple.py
+    see bin/example.py
 ***
 Authors: Stefan Finseth
 
