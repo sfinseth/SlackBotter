@@ -1,4 +1,4 @@
-MspSlackBot
+SlackBotter
 ===========
 Purpose of this package:
 ************************
@@ -11,7 +11,7 @@ Packages:
 *********
 What:
 
-    MspSlackBot
+    SlackBotter
 
 Contains:
 
