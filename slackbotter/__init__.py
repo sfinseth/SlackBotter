@@ -61,7 +61,7 @@ class SlackBotter(object):
         return params
 
     def send_message(self, msg: str):
-        print(self.slack_client.api_call('chat.postMessage', as_user='true', channel=self.channel, text=msg))
+        print(self.slack_client.rtm_send_message(self.channel, msg))
         return
 
     def send_help_message(self, trigger: str):
