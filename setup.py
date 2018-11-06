@@ -10,6 +10,6 @@ setup(
     url='http://github.com/sfinseth/SlackBotter.git',
     license='LICENSE.txt',
     description='Slack bot for simple workflow',
-    long_description=open('README.txt').read(),
+    long_description=open('README.md').read(),
     requires=['slackclient', 'requests', ],
 )
