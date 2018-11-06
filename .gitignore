@@ -102,3 +102,6 @@ ENV/
 
 # pycharm
 .idea/
+
+# log files
+bin/messsage_log.json
