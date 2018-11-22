@@ -124,52 +124,56 @@ class SlackBotter(object):
                 incoming = self.slack_client.rtm_read()
                 for inc in incoming:
                     if 'type' in inc and 'user' in inc:
-                        if inc['user'] != sender or inc['thread_ts'] != thread_ts:
-                            self.check_message(inc['text'], inc['user'], inc['thread_ts'])
-                            continue
                         if inc['type'] == 'message':
-                            if 'text' in inc:
-                                if self.flows[command]['steps'][step]['values']:
-                                    if inc['text'] in self.flows[command]['steps'][step]['values']:
-                                        args[step] = inc['text']
-                                        continue
-                                    elif inc['text'] == 'help':
-                                        if self.flows[command]['steps'][step]['values']:
-                                            self.send_message('Allowed values:\n*- {}*'.format(
-                                                '*\n*- '.join(self.flows[command]['steps'][step]['values'])), thread_ts)
+                            if 'thread_ts' not in inc.keys():
+                                if inc['user'] != sender or inc['ts'] != thread_ts:
+                                    self.send_message('I am currently processing another request, please wait...',
+                                                      thread=inc['ts'])
+                                    continue
+                            if inc['type'] == 'message':
+                                if 'text' in inc:
+                                    if self.flows[command]['steps'][step]['values']:
+                                        if inc['text'] in self.flows[command]['steps'][step]['values']:
+                                            args[step] = inc['text']
                                             continue
-                                    elif inc['text'] == 'abort':
-                                        self.send_message('Aborting flow', thread_ts)
-                                        return
-                                    else:
-                                        self.send_message('Invalid option', thread_ts)
-                                elif self.flows[command]['steps'][step]['pattern']:
-                                    if inc['text'] == 'help':
-                                        if self.flows[command]['steps'][step]['pattern']:
-                                            self.send_message('Allowed pattern:\n*- {}*'.format(
+                                        elif inc['text'] == 'help':
+                                            if self.flows[command]['steps'][step]['values']:
+                                                self.send_message('Allowed values:\n*- {}*'.format(
+                                                    '*\n*- '.join(self.flows[command]['steps'][step]['values'])),
+                                                    thread_ts)
+                                                continue
+                                        elif inc['text'] == 'abort':
+                                            self.send_message('Aborting flow', thread_ts)
+                                            return
+                                        else:
+                                            self.send_message('Invalid option', thread_ts)
+                                    elif self.flows[command]['steps'][step]['pattern']:
+                                        if inc['text'] == 'help':
+                                            if self.flows[command]['steps'][step]['pattern']:
+                                                self.send_message('Allowed pattern:\n*- {}*'.format(
+                                                    self.flows[command]['steps'][step]['pattern']), thread_ts)
+                                                continue
+                                        elif inc['text'] == 'abort':
+                                            self.send_message('Aborting flow', thread_ts)
+                                            return
+                                        matches = re.search(self.flows[command]['steps'][step]['pattern'], inc['text'])
+                                        if matches is not None:
+                                            args[step] = inc['text']
+                                            continue
+                                        else:
+                                            self.send_message('Invalid option, must match pattern: {}'.format(
                                                 self.flows[command]['steps'][step]['pattern']), thread_ts)
                                             continue
                                     elif inc['text'] == 'abort':
                                         self.send_message('Aborting flow', thread_ts)
                                         return
-                                    matches = re.search(self.flows[command]['steps'][step]['pattern'], inc['text'])
-                                    if matches is not None:
-                                        args[step] = inc['text']
+                                    elif inc['text'] == 'help':
+                                        self.send_message('Allowed values:\n*- {}*'.format(
+                                            '*\n*- '.join(self.flows[command]['steps'][step]['options'])), thread_ts)
                                         continue
                                     else:
-                                        self.send_message('Invalid option, must match pattern: {}'.format(
-                                            self.flows[command]['steps'][step]['pattern']), thread_ts)
+                                        args[step] = inc['text']
                                         continue
-                                elif inc['text'] == 'abort':
-                                    self.send_message('Aborting flow', thread_ts)
-                                    return
-                                elif inc['text'] == 'help':
-                                    self.send_message('Allowed values:\n*- {}*'.format(
-                                        '*\n*- '.join(self.flows[command]['steps'][step]['options'])), thread_ts)
-                                    continue
-                                else:
-                                    args[step] = inc['text']
-                                    continue
         self.flows[command]['action'](args)
 
     def send_message(self, msg: str, thread: str = None):
