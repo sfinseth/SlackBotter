@@ -3,7 +3,7 @@ from slackbotter.bot import SlackBotter
 from slackbotter.dictstore import DictStore
 
 slack_channel = 'test_channel'  # Replace with channel to write in
-slack_token = 'xoxb-2913143739-474123084806-ueBq5cM06ocnJ4Nhs9FNc3Pd'  # Replace with slackbot token
+slack_token = '#######'  # Replace with slackbot token
 bot = SlackBotter(slack_token, slack_channel)
 
 store = DictStore('message_log')

@@ -1,11 +1,12 @@
-from distutils.core import setup
+# from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='SlackBotter',
     version='1.2',
     author='Stefan Finseth',
     author_email='stefanfinseth@gmail.com',
-    packages=['slackbotter', 'dictstore', ],
+    packages=['slackbotter' ],
     scripts=['bin/example.py',],
     url='http://github.com/sfinseth/SlackBotter.git',
     license='LICENSE.txt',
