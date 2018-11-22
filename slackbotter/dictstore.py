@@ -14,7 +14,7 @@ class DictStore:
 
     def write(self, data: dict):
         with open(self.filename, 'w') as outfile:
-            json.dump(data, outfile)
+            json.dump(data, outfile, indent=4)
         return None
 
     def load(self):
