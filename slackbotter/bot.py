@@ -127,6 +127,10 @@ class SlackBotter(object):
                         if inc['type'] == 'message':
                             if 'thread_ts' not in inc.keys():
                                 if inc['user'] != sender or inc['ts'] != thread_ts:
+                                    user_id, msg = self.parse_direct_mention(inc['text'])
+                                    if user_id == self.bot_id and msg == 'force abort':
+                                        self.send_message('Forcefully aborting running flow', thread=inc['ts'])
+                                        return
                                     self.send_message('I am currently processing another request, please wait...',
                                                       thread=inc['ts'])
                                     continue
