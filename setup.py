@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='SlackBotter',
-    version='1.2.2',
+    version='1.2.4',
     author='Stefan Finseth',
     author_email='stefanfinseth@gmail.com',
     packages=['slackbotter' ],

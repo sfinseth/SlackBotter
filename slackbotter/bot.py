@@ -172,6 +172,7 @@ class SlackBotter(object):
                                                                     '*\n- '.join(
                                                                         self.flows[command]['steps'][step]['values'])),
                                                                 thread_ts)
+                                                            continue
                                                     elif self.flows[command]['steps'][step]['pattern']:
                                                         if inc['text'] == 'help':
                                                             if self.flows[command]['steps'][step]['pattern']:
