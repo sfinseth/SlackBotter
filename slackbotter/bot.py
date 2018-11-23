@@ -150,7 +150,10 @@ class SlackBotter(object):
                                             self.send_message('Aborting flow', thread_ts)
                                             return
                                         else:
-                                            self.send_message('Invalid option', thread_ts)
+                                            self.send_message('Invalid
+                                                    option\nTry one of these:
+                                                    *- {}*'.format('*\n-
+                                                        '.join(flows[command]['steps'][step]['values']), thread_ts)
                                     elif self.flows[command]['steps'][step]['pattern']:
                                         if inc['text'] == 'help':
                                             if self.flows[command]['steps'][step]['pattern']:
