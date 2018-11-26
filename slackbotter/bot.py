@@ -206,7 +206,7 @@ class SlackBotter(object):
                                                     else:
                                                         args[step] = inc['text']
                                                         continue
-                                            self.flows[command]['action'](args)
+        self.flows[command]['action'](args)
 
     def send_message(self, msg: str, thread: str = None):
         self.slack_client.rtm_send_message(self.channel, msg, thread)
