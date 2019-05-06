@@ -32,4 +32,4 @@ Typical Usage:
 ***
 Authors: Stefan Finseth
 
-Version: 1.2.6 of 2018-11-06
+Version: 1.2.6 of 2018-11-26
