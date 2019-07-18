@@ -16,6 +16,7 @@ class SlackBotter(object):
         self.recurring_functions = {}
         self.parameters = {}
         self.allowed_values = {}
+        self.allowed_pattern = {}
         self.flows = {}
         self.slack_client = SlackClient(token)
         self.rtm_read_delay = rtm_read_delay
@@ -27,7 +28,8 @@ class SlackBotter(object):
         self.triggers['!{}'.format(keyword)] = command
         return
 
-    def add_parameter(self, trigger: str, flag: str, name: str, allowed_values: list = None):
+    def add_parameter(self, trigger: str, flag: str, name: str, allowed_values: list = None,
+                      allowed_pattern: str = None):
         if ('!{}'.format(trigger)) not in self.parameters.keys():
             self.parameters['!{}'.format(trigger)] = {}
         self.parameters['!{}'.format(trigger)][flag] = name
@@ -35,6 +37,8 @@ class SlackBotter(object):
             self.allowed_values['!{}'.format(trigger)] = {}
         if allowed_values:
             self.allowed_values['!{}'.format(trigger)][flag] = allowed_values
+        if allowed_pattern:
+            self.allowed_pattern['!{}'.format(trigger)][flag] = allowed_pattern
         return
 
     def flow_create(self, keyword: str, message: str):
@@ -105,6 +109,14 @@ class SlackBotter(object):
                                           .format(param_value, v, k, '*\n*- '.join(self.allowed_values[command][k])),
                                           thread=thread_ts)
                         return
+                if k in self.allowed_pattern[command].keys():
+                    matches = re.search(self.allowed_pattern[command][k], param_value)
+                    if not matches:
+                        self.send_message('Invalid Parameter value: *{}*\nfor parameter *{} ({})*'
+                                          ', must match pattern: `{}`'
+                                          .format(param_value, v, k, self.allowed_pattern[command][k]),
+                                          thread=thread_ts)
+                        return
             except IndexError:
                 self.send_message('Parameter *{}* is missing.'.format(v), thread=thread_ts)
                 self.send_help_message(command[1:])
@@ -169,7 +181,7 @@ class SlackBotter(object):
                                                         else:
                                                             self.send_message(
                                                                 'Invalid option\nTry one of these:\n* -{}*'.format(
-                                                                    '*\n- '.join(
+                                                                    '*\n*- '.join(
                                                                         self.flows[command]['steps'][step]['values'])),
                                                                 thread_ts)
                                                             continue
@@ -209,7 +221,7 @@ class SlackBotter(object):
         self.flows[command]['action'](args)
 
     def send_message(self, msg: str, thread: str = None):
-        self.slack_client.rtm_send_message(self.channel, msg, thread)
+        self.slack_client.api_call('chat.postMessage', channel=self.channel, text=msg, thread_ts=thread)
         return
 
     def send_help_message(self, trigger: str):

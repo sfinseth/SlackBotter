@@ -1,14 +1,14 @@
 SlackBotter
 ===========
 Purpose of this package:
-************************
+------------------------
 Provides a quick and easy way to hook your
 python code up to a slack bot, letting you
 worry about writing functionality instead of
 spending time writing slack integration.
 
 Packages:
-*********
+---------
 What:
 
     SlackBotter
@@ -27,9 +27,10 @@ Contains:
     functionality to save a dictionary to a json file on disk
 
 Typical Usage:
-**************
+--------------
     see bin/example.py
-***
+
+
 Authors: Stefan Finseth
 
 Version: 1.2.6 of 2018-11-26
